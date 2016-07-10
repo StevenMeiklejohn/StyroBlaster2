@@ -9,18 +9,29 @@ var GameBox = React.createClass({
 
 
   drawBackground: function(){
+    console.log("drawBackground triggered");
     var canvas = document.getElementById("canvas");
+    console.log(canvas);
     var ctx = canvas.getContext("2d");
-    canvas.width = 900;
-    canvas.height =500;
-
-    //Draw Background Image
+    var velocity=100;
     var bgImage = new Image();
+    bgImage.addEventListener('load',drawImage,false);
     bgImage.src = "https://i.ytimg.com/vi/T40NSkd7Olc/maxresdefault.jpg";
-    bgImage.onload = function(){
-    ctx.drawImage(bgImage,0,0)
-    };
-    return canvas;
+    function drawImage(time){    
+    console.log("drawImage triggered");      
+            var framegap=time-lastRepaintTime;
+        lastRepaintTime=time;
+        var translateX=velocity*(framegap/1000);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        var pattern=ctx.createPattern(bgImage,"repeat-x");
+        ctx.fillStyle=pattern;
+        ctx.rect(translateX,0,bgImage.width,bgImage.height);
+         ctx.fill();
+            ctx.translate(-translateX,0); 
+      requestAnimationFrame(drawImage);
+      return canvas
+    }
+    var lastRepaintTime=window.performance.now();
  
 
   },
@@ -33,12 +44,11 @@ var GameBox = React.createClass({
         <h1>StyroBlaster</h1>
       </div>
 
-
-          <div className="BackgroundBox">
-          <BackgroundBox 
-          drawBackground={this.drawBackground}
-          />
-          </div>
+      <div className="BackgroundBox">
+        <BackgroundBox 
+        drawBackground={this.drawBackground}
+        />
+      </div>
 
       </div>
       );
