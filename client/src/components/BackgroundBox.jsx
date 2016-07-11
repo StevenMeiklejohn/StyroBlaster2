@@ -4,9 +4,11 @@ var BackgroundBox = React.createClass({
 
   render: function() {
     return (
-      <canvas id="canvas2">
-        {this.props.drawBackground()}
+      <div id="main">
+      <canvas id="canvas">
+      {this.props.background()}
       </canvas>
+      </div>
   )}
 
 })
