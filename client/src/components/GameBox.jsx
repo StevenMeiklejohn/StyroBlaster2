@@ -43,7 +43,7 @@ var GameBox = React.createClass({
             ctx.translate(-translateX,0);   
             requestAnimationFrame(drawImage);
     };
-    var lastRepaintTime=window.performance.now();
+    // var lastRepaintTime=window.performance.now();
   },
 
 
