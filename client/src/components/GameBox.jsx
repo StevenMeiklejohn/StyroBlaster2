@@ -1,6 +1,7 @@
 var React = require('react');
 var BackgroundBox = require('./BackgroundBox.jsx');
 
+
 var GameBox = React.createClass({
 
   componentDidMount: function() {
@@ -9,21 +10,28 @@ var GameBox = React.createClass({
 
 
 
-
-
   drawBackground: function(){
-    var canvas = document.getElementById("background");
-    console.log(canvas);
-    var ctx = canvas.getContext("2d");
+    var canvas = document.createElement("CANVAS");
+    canvas.id = "background"
     canvas.width = 900;
     canvas.height = 500;
 
+
+    console.log(canvas);
+    console.log(canvas.width);
+
+    var ctx = canvas.getContext("2d");
+    console.log(ctx);
+
+
     var velocity=100;
     var bgImage = new Image();
-    bgImage.addEventListener('load',drawImage,false);
     bgImage.src = "https://i.ytimg.com/vi/T40NSkd7Olc/maxresdefault.jpg";
-    function drawImage(time){  
+    bgImage.addEventListener('load',drawImage,false);
 
+
+    function drawImage(time){  
+            console.log('drawImage triggered');
             var framegap=time-lastRepaintTime;
             var lastRepaintTime=time;
             var translateX=velocity*(framegap/1000);
@@ -38,6 +46,12 @@ var GameBox = React.createClass({
     var lastRepaintTime=window.performance.now();
   },
 
+
+
+
+
+ 
+
   
  
 
@@ -47,15 +61,17 @@ var GameBox = React.createClass({
   render: function() {
     return (
       <div className="GameBox">
-      <div id='title'>
         <h1>StyroBlaster</h1>
-      </div>
 
-      <div className="BackgroundBox">
-      <BackgroundBox 
-      background={this.drawBackground}
-      />
-      </div>
+
+        <div className="BackgroundBox">
+
+        <BackgroundBox
+        draw={this.drawBackground}
+        />
+        </div>
+
+
 
       </div>
       );

@@ -2,13 +2,16 @@ var React = require('react');
 
 var BackgroundBox = React.createClass({
 
+
+
+
   render: function() {
     return (
-      <div id="main">
-      <canvas id="canvas">
-      {this.props.background()}
+
+      <canvas id="background" width="900" height="500">
+      {this.props.draw()}
       </canvas>
-      </div>
+
   )}
 
 })

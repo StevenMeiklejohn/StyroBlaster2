@@ -19709,18 +19709,24 @@
 	  },
 	
 	  drawBackground: function drawBackground() {
-	    var canvas = document.getElementById("background");
-	    console.log(canvas);
-	    var ctx = canvas.getContext("2d");
+	    var canvas = document.createElement("CANVAS");
+	    canvas.id = "background";
 	    canvas.width = 900;
 	    canvas.height = 500;
 	
+	    console.log(canvas);
+	    console.log(canvas.width);
+	
+	    var ctx = canvas.getContext("2d");
+	    console.log(ctx);
+	
 	    var velocity = 100;
 	    var bgImage = new Image();
-	    bgImage.addEventListener('load', drawImage, false);
 	    bgImage.src = "https://i.ytimg.com/vi/T40NSkd7Olc/maxresdefault.jpg";
-	    function drawImage(time) {
+	    bgImage.addEventListener('load', drawImage, false);
 	
+	    function drawImage(time) {
+	      console.log('drawImage triggered');
 	      var framegap = time - lastRepaintTime;
 	      var lastRepaintTime = time;
 	      var translateX = velocity * (framegap / 1000);
@@ -19740,19 +19746,15 @@
 	      'div',
 	      { className: 'GameBox' },
 	      React.createElement(
-	        'div',
-	        { id: 'title' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'StyroBlaster'
-	        )
+	        'h1',
+	        null,
+	        'StyroBlaster'
 	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'BackgroundBox' },
 	        React.createElement(BackgroundBox, {
-	          background: this.drawBackground
+	          draw: this.drawBackground
 	        })
 	      )
 	    );
@@ -19776,13 +19778,9 @@
 	
 	  render: function render() {
 	    return React.createElement(
-	      "div",
-	      { id: "main" },
-	      React.createElement(
-	        "canvas",
-	        { id: "canvas" },
-	        this.props.background()
-	      )
+	      "canvas",
+	      { id: "background", width: "900", height: "500" },
+	      this.props.draw()
 	    );
 	  }
 	
