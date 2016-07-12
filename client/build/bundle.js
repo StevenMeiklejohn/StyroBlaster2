@@ -19852,8 +19852,8 @@
 	    this.shipX = 0;
 	    this.shipY = 0;
 	    console.log(this.ship);
-	
-	    // this.ctx.putImageData(this.oldBack, 0, 0);
+	    this.oldBack = this.ctx.getImageData(30, 30, 30, 30);
+	    this.ctx.putImageData(this.oldBack, 0, 0);
 	    this.GameLoop();
 	  },
 	
@@ -19866,11 +19866,11 @@
 	  doGameLoop: function doGameLoop() {
 	    console.log("doGameLoop Called");
 	
-	    // Put old background down to erase ship.
-	    // this.ctx.putImageData(this.oldBack, this.oldShipX, this.oldShipY);
-	
 	    // Put ship in new position.
 	    this.ctx.putImageData(this.ship, this.shipX, this.shipY);
+	
+	    // Put old background down to erase ship.
+	    this.ctx.putImageData(this.oldBack, this.oldShipX, this.oldShipY);
 	  },
 	
 	  whatKey: function whatKey(evt) {
