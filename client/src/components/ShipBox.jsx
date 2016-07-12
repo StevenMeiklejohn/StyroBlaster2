@@ -13,6 +13,8 @@ var ShipBox = React.createClass({
 
 
     componentDidMount: function() {
+      // Add keyboard listener.
+      window.addEventListener('keydown', this.whatKey, true);
       this.makeShip()
     },
 
@@ -49,99 +51,102 @@ var ShipBox = React.createClass({
         this.ctx.closePath();
         this.ctx.fillStyle = "rgb(51, 190, 0)";
         this.ctx.fill();
-        // Save ship data.
 
+        // Save ship data.
         this.ship = this.ctx.getImageData(0, 0, 30, 30);
+        this.shipX = 0;
+        this.shipY=0;
         console.log(this.ship);
 
         // this.ctx.putImageData(this.oldBack, 0, 0);
-        // this.GameLoop();
+        this.GameLoop();
       },
 
-      // GameLoop: function(){
-      //   // Play the game until the until the game is over.
-      //   gameLoop = setInterval(this.doGameLoop, 16);
-      //   // Add keyboard listener.
-      //   window.addEventListener('keydown', whatKey, true);
-      // },
+      GameLoop: function(){
+        console.log("GameLoop called");
+        // Play the game until the until the game is over.
+        setInterval(this.doGameLoop, 16);
 
-      // doGameLoop: function() {
+      },
 
-      //  // Put old background down to erase shipe.
+      doGameLoop: function() {
+        console.log("doGameLoop Called");
+
+       // Put old background down to erase ship.
       // this.ctx.putImageData(this.oldBack, this.oldShipX, this.oldShipY);
 
-      // // Put ship in new position.
-      // this.ctx.putImageData(this.ship, this.shipX, this.shipY);
+      // Put ship in new position.
+      this.ctx.putImageData(this.ship, this.shipX, this.shipY);
 
-      // },
+      },
 
-      // whatKey: function(evt) {
+      whatKey: function(evt) {
 
-      //   // Flag to put variables back if we hit an edge of the board.
-      //   var flag = 0;
+        // Flag to put variables back if we hit an edge of the board.
+        var flag = 0;
 
-      //   // Get where the ship was before key process.
-      //   // var oldShipX = shipX;
-      //   // var oldShipY = shipY;
-      //   // var oldBack = back;
+        // Get where the ship was before key process.
+        this.oldShipX = this.shipX;
+        this.oldShipY = this.shipY;
+        this.oldBack = this.back;
 
-      //   switch (evt.keyCode) {
+        switch (evt.keyCode) {
 
-      //     // Left arrow.
-      //   case 37:
-      //     this.shipX = this.shipX - 30;
-      //     if (this.shipX < 0) {
-      //       // If at edge, reset ship position and set flag.
-      //       this.shipX = 0;
-      //       flag = 1;
-      //     }
-      //     break;
+          // Left arrow.
+        case 37:
+          this.shipX = this.shipX - 30;
+          if (this.shipX < 0) {
+            // If at edge, reset ship position and set flag.
+            this.shipX = 0;
+            flag = 1;
+          }
+          break;
 
-      //     // Right arrow.
-      //   case 39:
-      //     this.shipX = this.shipX + 30;
-      //     if (this.shipX > 270) {
-      //       // If at edge, reset ship position and set flag.
-      //       this.shipX = 270;
-      //       flag = 1;
-      //     }
-      //     break;
+          // Right arrow.
+        case 39:
+          this.shipX = this.shipX + 30;
+          if (this.shipX > 870) {
+            // If at edge, reset ship position and set flag.
+            this.shipX = 870;
+            flag = 1;
+          }
+          break;
 
-      //     // Down arrow
-      //   case 40:
-      //     this.shipY = this.shipY + 30;
-      //     if (this.shipY > 270) {
-      //       // If at edge, reset ship position and set flag.
-      //       this.shipY = 270;
-      //       flag = 1;
-      //     }
-      //     break;
+          // Down arrow
+        case 40:
+          this.shipY = this.shipY + 30;
+          if (this.shipY > 470) {
+            // If at edge, reset ship position and set flag.
+            this.shipY = 470;
+            flag = 1;
+          }
+          break;
 
-      //     // Up arrow 
-      //   case 38:
-      //     this.shipY = this.shipY - 30;
-      //     if (this.shipY < 0) {
-      //       // If at edge, reset ship position and set flag.
-      //       this.shipY = 0;
-      //       flag = 1;
-      //     }
-      //     break;
+          // Up arrow 
+        case 38:
+          this.shipY = this.shipY - 30;
+          if (this.shipY < 0) {
+            // If at edge, reset ship position and set flag.
+            this.shipY = 0;
+            flag = 1;
+          }
+          break;
 
-      //   }
+        }
 
-      //   // If flag is set, the ship did not move.
-      //   // Put everything back the way it was.
-      //   if (flag) {
-      //     this.shipX = this.oldShipX;
-      //     this.shipY = this.oldShipY;
-      //     this.back = this.oldBack;
-      //   } else {
-      //     // Otherwise, get background where the ship will go
-      //     // So you can redraw background when the ship
-      //     // moves again.
-      //     this.back = ctx.getImageData(this.shipX, this.shipY, 30, 30);
-      //   }
-      // },
+        // If flag is set, the ship did not move.
+        // Put everything back the way it was.
+        if (flag) {
+          this.shipX = this.oldShipX;
+          this.shipY = this.oldShipY;
+          this.back = this.oldBack;
+        } else {
+          // Otherwise, get background where the ship will go
+          // So you can redraw background when the ship
+          // moves again.
+          this.back = this.ctx.getImageData(this.shipX, this.shipY, 30, 30);
+        }
+      },
     
     render: function() {
       var style = {

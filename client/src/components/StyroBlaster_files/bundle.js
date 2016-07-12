@@ -19879,9 +19879,9 @@
 	    var flag = 0;
 	
 	    // Get where the ship was before key process.
-	    this.oldShipX = this.shipX;
-	    this.oldShipY = this.shipY;
-	    this.oldBack = this.back;
+	    // var oldShipX = shipX;
+	    // var oldShipY = shipY;
+	    // var oldBack = back;
 	
 	    switch (evt.keyCode) {
 	
