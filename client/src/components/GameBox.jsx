@@ -1,5 +1,5 @@
 var React = require('react');
-var BackgroundBox = require('./BackgroundBox.jsx');
+var ShipBox = require('./ShipBox.jsx');
 
 
 var GameBox = React.createClass({
@@ -64,16 +64,12 @@ var GameBox = React.createClass({
         <h1>StyroBlaster</h1>
 
 
-        <div className="BackgroundBox">
-
-        <BackgroundBox
-        draw={this.drawBackground}
-        />
-        </div>
-
-
+      <div className="BackgroundBox">
+      <ShipBox/>
+      </div>
 
       </div>
+
       );
   }
 

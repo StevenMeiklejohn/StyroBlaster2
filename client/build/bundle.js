@@ -50,7 +50,38 @@
 	var ReactDOM = __webpack_require__(158);
 	var GameBox = __webpack_require__(159);
 	
+	var drawBackground = function drawBackground() {
+	  var canvas = document.getElementById("background");
+	  console.log(canvas);
+	  var ctx = canvas.getContext("2d");
+	  canvas.width = 900;
+	  canvas.height = 500;
+	
+	  var velocity = 100;
+	  console.log(velocity);
+	  var bgImage = new Image();
+	  bgImage.addEventListener('load', drawImage, false);
+	  bgImage.src = "https://i.ytimg.com/vi/T40NSkd7Olc/maxresdefault.jpg";
+	  console.log(bgImage);
+	  function drawImage(time) {
+	
+	    var framegap = time - lastRepaintTime;
+	    lastRepaintTime = time;
+	    var translateX = velocity * (framegap / 1000);
+	    ctx.clearRect(0, 0, canvas.width, canvas.height);
+	    var pattern = ctx.createPattern(bgImage, "repeat-x");
+	    ctx.fillStyle = pattern;
+	    ctx.rect(translateX, 0, bgImage.width, bgImage.height);
+	    ctx.fill();
+	    ctx.translate(-translateX, 0);
+	    requestAnimationFrame(drawImage);
+	  }
+	  var lastRepaintTime = window.performance.now();
+	};
+	
 	window.onload = function () {
+	
+	  drawBackground();
 	  ReactDOM.render(React.createElement(
 	    'div',
 	    null,
@@ -19698,7 +19729,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var BackgroundBox = __webpack_require__(160);
+	var ShipBox = __webpack_require__(160);
 	
 	var GameBox = React.createClass({
 	  displayName: 'GameBox',
@@ -19753,9 +19784,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'BackgroundBox' },
-	        React.createElement(BackgroundBox, {
-	          draw: this.drawBackground
-	        })
+	        React.createElement(ShipBox, null)
 	      )
 	    );
 	  }
@@ -19772,119 +19801,154 @@
 	
 	var React = __webpack_require__(1);
 	
-	var BackgroundBox = React.createClass({
-	  displayName: 'BackgroundBox',
+	var ShipBox = React.createClass({
+	  displayName: 'ShipBox',
 	
+	
+	  ship: null,
+	  shipX: null,
+	  shipY: null,
+	  oldShipX: null,
+	  oldShipY: null,
+	  // back:null,
+	  // oldBack: null,
 	
 	  componentDidMount: function componentDidMount() {
-	    this.drawBackground();
+	    this.makeShip();
 	  },
 	
-	  // componentDidUpdate: function() {
-	  //   var context = this.getDOMNode().getContext('2d');
-	  //   context.clearRect(0, 0, 900, 500);
-	
-	  // },
-	
-	  // scrollBackground: function(){
-	
-	  //         var framegap=time-lastRepaintTime;
-	  //         lastRepaintTime=time;
-	  //         var translateX=velocity*(framegap/1000);
-	  //         ctx.clearRect(0,0,canvas.width,canvas.height);
-	  //         var pattern=ctx.createPattern(bgImage,"repeat-x");
-	  //         ctx.fillStyle=pattern;
-	  //         ctx.rect(translateX,0,bgImage.width,bgImage.height);
-	  //        ctx.fill();
-	  //         ctx.translate(-translateX,0);  
-	  //     requestAnimationFrame(drawImage);
-	  // }
-	  // var lastRepaintTime=window.performance.now();
-	
-	  ///////////////////////
-	  //     var img = document.getElementById("stars");
-	  //     var context = this.getDOMNode().getContext('2d');
-	  //     var vx=0;
-	  //     context.clearRect(0, 0, 900, 500);
-	  //     var pattern=context.createPattern(img,"repeat-x");
-	  //     context.fillStyle=pattern;
-	  //     context.rect(vx,0, 900, 500);
-	  //     context.fill();
-	
-	  // },
-	
-	  drawBackground: function drawBackground() {
+	  makeShip: function makeShip() {
 	    //Get canvas element
-	    var ctx = this.getDOMNode().getContext('2d');
-	    ctx.clearRect(0, 0, 900, 500);
-	    console.log(ctx);
-	
-	    // Paint it black.
-	    ctx.fillStyle = "black";
-	    ctx.rect(0, 0, 900, 500);
-	    ctx.fill();
-	    // Paint the starfield.
-	    this.stars(ctx);
-	  },
-	
-	  // Paint a random starfield.
-	
-	  stars: function stars(ctx) {
-	    // Draw 50 stars.
-	    for (var i = 0; i <= 50; i++) {
-	      // Get random positions for stars.
-	      var x = Math.floor(Math.random() * 900);
-	      var y = Math.floor(Math.random() * 500);
-	
-	      // Make the stars white
-	      ctx.fillStyle = "white";
-	
-	      // Give the ship some room.
-	      if (x < 30 || y < 30) ctx.fillStyle = "black";
-	
-	      // Draw an individual star.
-	      ctx.beginPath();
-	      ctx.arc(x, y, 3, 0, Math.PI * 2, true);
-	      ctx.closePath();
-	      ctx.fill();
-	    }
-	
-	    // Draw space ship.
-	    this.makeShip(ctx);
-	  },
-	
-	  makeShip: function makeShip(ctx) {
+	    this.ctx = this.getDOMNode().getContext('2d');
+	    this.ctx.clearRect(0, 0, 900, 500);
+	    console.log(this.ctx);
 	
 	    // Draw saucer bottom.
-	    ctx.beginPath();
-	    ctx.moveTo(28.4, 16.9);
-	    ctx.bezierCurveTo(28.4, 19.7, 22.9, 22.0, 16.0, 22.0);
-	    ctx.bezierCurveTo(9.1, 22.0, 3.6, 19.7, 3.6, 16.9);
-	    ctx.bezierCurveTo(3.6, 14.1, 9.1, 11.8, 16.0, 11.8);
-	    ctx.bezierCurveTo(22.9, 11.8, 28.4, 14.1, 28.4, 16.9);
-	    ctx.closePath();
-	    ctx.fillStyle = "rgb(222, 103, 0)";
-	    ctx.fill();
+	    this.ctx.beginPath();
+	    this.ctx.moveTo(28.4, 16.9);
+	    this.ctx.bezierCurveTo(28.4, 19.7, 22.9, 22.0, 16.0, 22.0);
+	    this.ctx.bezierCurveTo(9.1, 22.0, 3.6, 19.7, 3.6, 16.9);
+	    this.ctx.bezierCurveTo(3.6, 14.1, 9.1, 11.8, 16.0, 11.8);
+	    this.ctx.bezierCurveTo(22.9, 11.8, 28.4, 14.1, 28.4, 16.9);
+	    this.ctx.closePath();
+	    this.ctx.fillStyle = "rgb(222, 103, 0)";
+	    this.ctx.fill();
 	
 	    // Draw saucer top.
-	    ctx.beginPath();
-	    ctx.moveTo(22.3, 12.0);
-	    ctx.bezierCurveTo(22.3, 13.3, 19.4, 14.3, 15.9, 14.3);
-	    ctx.bezierCurveTo(12.4, 14.3, 9.6, 13.3, 9.6, 12.0);
-	    ctx.bezierCurveTo(9.6, 10.8, 12.4, 9.7, 15.9, 9.7);
-	    ctx.bezierCurveTo(19.4, 9.7, 22.3, 10.8, 22.3, 12.0);
-	    ctx.closePath();
-	    ctx.fillStyle = "rgb(51, 190, 0)";
-	    ctx.fill();
+	    this.ctx.beginPath();
+	    this.ctx.moveTo(22.3, 12.0);
+	    this.ctx.bezierCurveTo(22.3, 13.3, 19.4, 14.3, 15.9, 14.3);
+	    this.ctx.bezierCurveTo(12.4, 14.3, 9.6, 13.3, 9.6, 12.0);
+	    this.ctx.bezierCurveTo(9.6, 10.8, 12.4, 9.7, 15.9, 9.7);
+	    this.ctx.bezierCurveTo(19.4, 9.7, 22.3, 10.8, 22.3, 12.0);
+	    this.ctx.closePath();
+	    this.ctx.fillStyle = "rgb(51, 190, 0)";
+	    this.ctx.fill();
+	    // Save ship data.
+	
+	    this.ship = this.ctx.getImageData(0, 0, 30, 30);
+	    console.log(this.ship);
+	
+	    // this.ctx.putImageData(this.oldBack, 0, 0);
+	    // this.GameLoop();
 	  },
 	
-	  render: function render() {
-	    return React.createElement('canvas', { id: 'background', width: 900, height: 500 });
-	  }
+	  // GameLoop: function(){
+	  //   // Play the game until the until the game is over.
+	  //   gameLoop = setInterval(this.doGameLoop, 16);
+	  //   // Add keyboard listener.
+	  //   window.addEventListener('keydown', whatKey, true);
+	  // },
 	
+	  // doGameLoop: function() {
+	
+	  //  // Put old background down to erase shipe.
+	  // this.ctx.putImageData(this.oldBack, this.oldShipX, this.oldShipY);
+	
+	  // // Put ship in new position.
+	  // this.ctx.putImageData(this.ship, this.shipX, this.shipY);
+	
+	  // },
+	
+	  // whatKey: function(evt) {
+	
+	  //   // Flag to put variables back if we hit an edge of the board.
+	  //   var flag = 0;
+	
+	  //   // Get where the ship was before key process.
+	  //   // var oldShipX = shipX;
+	  //   // var oldShipY = shipY;
+	  //   // var oldBack = back;
+	
+	  //   switch (evt.keyCode) {
+	
+	  //     // Left arrow.
+	  //   case 37:
+	  //     this.shipX = this.shipX - 30;
+	  //     if (this.shipX < 0) {
+	  //       // If at edge, reset ship position and set flag.
+	  //       this.shipX = 0;
+	  //       flag = 1;
+	  //     }
+	  //     break;
+	
+	  //     // Right arrow.
+	  //   case 39:
+	  //     this.shipX = this.shipX + 30;
+	  //     if (this.shipX > 270) {
+	  //       // If at edge, reset ship position and set flag.
+	  //       this.shipX = 270;
+	  //       flag = 1;
+	  //     }
+	  //     break;
+	
+	  //     // Down arrow
+	  //   case 40:
+	  //     this.shipY = this.shipY + 30;
+	  //     if (this.shipY > 270) {
+	  //       // If at edge, reset ship position and set flag.
+	  //       this.shipY = 270;
+	  //       flag = 1;
+	  //     }
+	  //     break;
+	
+	  //     // Up arrow
+	  //   case 38:
+	  //     this.shipY = this.shipY - 30;
+	  //     if (this.shipY < 0) {
+	  //       // If at edge, reset ship position and set flag.
+	  //       this.shipY = 0;
+	  //       flag = 1;
+	  //     }
+	  //     break;
+	
+	  //   }
+	
+	  //   // If flag is set, the ship did not move.
+	  //   // Put everything back the way it was.
+	  //   if (flag) {
+	  //     this.shipX = this.oldShipX;
+	  //     this.shipY = this.oldShipY;
+	  //     this.back = this.oldBack;
+	  //   } else {
+	  //     // Otherwise, get background where the ship will go
+	  //     // So you can redraw background when the ship
+	  //     // moves again.
+	  //     this.back = ctx.getImageData(this.shipX, this.shipY, 30, 30);
+	  //   }
+	  // },
+	
+	  render: function render() {
+	    var style = {
+	      position: "absolute",
+	      top: "200px",
+	      left: "50px"
+	    };
+	    return React.createElement('canvas', { id: 'background', width: 900, height: 500, style: style });
+	  }
 	});
 	
-	module.exports = BackgroundBox;
+	module.exports = ShipBox;
 
 /***/ }
 /******/ ]);

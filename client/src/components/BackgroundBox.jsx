@@ -4,7 +4,7 @@ var BackgroundBox = React.createClass({
   
 
     componentDidMount: function() {
-      this.drawBackground();
+      this.makeShip();
 
     },
 
@@ -44,49 +44,53 @@ var BackgroundBox = React.createClass({
     // },
 
 
-    drawBackground: function(){
+    // drawBackground: function(){
+    //     //Get canvas element
+    //     var ctx = this.getDOMNode().getContext('2d');
+    //     ctx.clearRect(0, 0, 900, 500);
+    //     console.log(ctx);
+
+
+      //     // Paint it black.
+      //     ctx.fillStyle = "black";
+      //     ctx.rect(0, 0, 900, 500);
+      //     ctx.fill();
+      //     // Paint the starfield.
+      //     this.stars(ctx);
+      // },
+
+      // // Paint a random starfield.
+
+
+      // stars: function(ctx) {
+      //   // Draw 50 stars.
+      //   for (var i = 0; i <= 50; i++) {
+      //     // Get random positions for stars.
+      //     var x = Math.floor(Math.random() * 900)
+      //     var y = Math.floor(Math.random() * 500)
+
+      //     // Make the stars white
+      //     ctx.fillStyle = "white";
+
+      //     // Give the ship some room.
+      //     if (x < 30 || y < 30) ctx.fillStyle = "black";
+
+      //     // Draw an individual star.
+      //     ctx.beginPath();
+      //     ctx.arc(x, y, 3, 0, Math.PI * 2, true);
+      //     ctx.closePath();
+      //     ctx.fill();
+      //   }
+
+      //   // Draw space ship.
+      //   this.makeShip(ctx);
+      // },
+
+      makeShip: function() {
         //Get canvas element
         var ctx = this.getDOMNode().getContext('2d');
         ctx.clearRect(0, 0, 900, 500);
         console.log(ctx);
-
-
-          // Paint it black.
-          ctx.fillStyle = "black";
-          ctx.rect(0, 0, 900, 500);
-          ctx.fill();
-          // Paint the starfield.
-          this.stars(ctx);
-      },
-
-      // Paint a random starfield.
-
-
-      stars: function(ctx) {
-        // Draw 50 stars.
-        for (var i = 0; i <= 50; i++) {
-          // Get random positions for stars.
-          var x = Math.floor(Math.random() * 900)
-          var y = Math.floor(Math.random() * 500)
-
-          // Make the stars white
-          ctx.fillStyle = "white";
-
-          // Give the ship some room.
-          if (x < 30 || y < 30) ctx.fillStyle = "black";
-
-          // Draw an individual star.
-          ctx.beginPath();
-          ctx.arc(x, y, 3, 0, Math.PI * 2, true);
-          ctx.closePath();
-          ctx.fill();
-        }
-
-        // Draw space ship.
-        this.makeShip(ctx);
-      },
-
-      makeShip: function(ctx) {
 
         // Draw saucer bottom.
         ctx.beginPath();
@@ -115,8 +119,12 @@ var BackgroundBox = React.createClass({
 
 
     render: function() {
-      return (<canvas id="background" width={900} height={500} />
-        );
+      var style = {
+        position: "absolute",
+        top: "200px",
+        left: "50px"
+      }
+      return (<canvas id="background" width={900} height={500} style={style} />);
     }
 
 
