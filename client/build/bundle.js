@@ -19811,6 +19811,11 @@
 	  shipY: null,
 	  oldShipX: null,
 	  oldShipY: null,
+	  direction: null,
+	  score: null,
+	  bomb: null,
+	  bulletX: null,
+	  bulletY: null,
 	  // back:null,
 	  // oldBack: null,
 	
@@ -19932,6 +19937,7 @@
 	          this.shipX = 0;
 	          flag = 1;
 	        }
+	        this.direction = "L";
 	        break;
 	
 	      // Right arrow.
@@ -19942,6 +19948,7 @@
 	          this.shipX = 870;
 	          flag = 1;
 	        }
+	        this.direction = "R";
 	        break;
 	
 	      // Down arrow
@@ -19952,6 +19959,7 @@
 	          this.shipY = 470;
 	          flag = 1;
 	        }
+	        this.direction = "D";
 	        break;
 	
 	      // Up arrow
@@ -19962,7 +19970,23 @@
 	          this.shipY = 0;
 	          flag = 1;
 	        }
+	        this.direction = "U";
 	        break;
+	
+	      // A key for drawing neutralizer field
+	      case 65:
+	        // Using this increases your score.
+	        // score = score + 20;
+	        // The ship isn't moving.
+	        flag = 1;
+	        // Draw the neutralizing ray which will let you pass.
+	        this.neutralize(this.direction);
+	        break;
+	
+	      // If any other keys were presssed
+	      default:
+	        flag = 1; // Don't move the ship.
+	        alert("Please only use the arrow keys.");
 	
 	    }
 	
@@ -19972,16 +19996,28 @@
 	      this.shipX = this.oldShipX;
 	      this.shipY = this.oldShipY;
 	      this.back = this.oldBack;
+	      this.score = this.score - 1;
 	    } else {
 	      // Otherwise, get background where the ship will go
 	      // So you can redraw background when the ship
 	      // moves again.
 	      this.back = this.ctx.getImageData(this.shipX, this.shipY, 30, 30);
 	    }
-	    this.collideTest();
+	    // Increase score.
+	    // this.score = this.score + 1;
+	
+	    // // Draw score on scoreboard.
+	    // ctx2.clearRect(0, 0, 300, 300);
+	    // ctx2.font = "20 point Ariel";
+	    // ctx2.fillText("Score", 20, 15);
+	    // ctx2.fillText(score, 100, 15);
+	
+	    // // Did we collide?
+	    this.collideTest(this.direction);
 	  },
 	
-	  collideTest: function collideTest() {
+	  collideTest: function collideTest(direction) {
+	    console.log("collide test called");
 	
 	    // Collision detection. Get a clip from the screen.
 	    var clipWidth = 20;
@@ -19998,6 +20034,73 @@
 	        break;
 	      }
 	    }
+	
+	    // Did we hit something?
+	    if (direction == "P") this.bang();
+	  },
+	
+	  bang: function bang() {
+	
+	    // You lose.
+	    alert("Game over! You hit an asteroid.");
+	    // Stop game.
+	    clearTimeout(gameLoop);
+	    window.removeEventListener('keydown', whatKey, true);
+	  },
+	
+	  neutralize: function neutralize(direction) {
+	    // Draw green for neutralizer.
+	    this.ctx = this.getDOMNode().getContext('2d');
+	    this.ctx.fillStyle = "#00FF00";
+	    this.ctx.beginPath();
+	    this.ctx.rect(this.shipX, this.shipY, 30, 30);
+	    this.ctx.closePath();
+	    this.ctx.fill();
+	
+	    // Save it for later.
+	    var bomb = this.ctx.getImageData(this.shipX, this.shipY, 30, 30);
+	
+	    // Which way was the ship going?
+	    // Put down a neuralizer field that way.
+	    switch (direction) {
+	
+	      case "D":
+	        this.ctx.putImageData(bomb, this.shipX, this.shipY + 30);
+	        break;
+	
+	      case "U":
+	        this.ctx.putImageData(bomb, this.shipX, this.shipY - 30);
+	        break;
+	
+	      case "L":
+	        this.ctx.putImageData(bomb, this.shipX - 30, this.shipY);
+	        break;
+	
+	      case "R":
+	        this.ctx.putImageData(bomb, this.shipX + 30, this.shipY);
+	        break;
+	
+	      default:
+	    }
+	  },
+	
+	  //This will replace neutralize
+	  makeBullet: function makeBullet() {
+	
+	    // Draw Bullet
+	    this.ctx = this.getDOMNode().getContext('2d');
+	    this.ctx.fillStyle = "#00FF00";
+	    this.ctx.beginPath();
+	    this.ctx.rect(this.shipX, this.shipY, 30, 30);
+	    this.ctx.closePath();
+	    this.ctx.fill();
+	    // this.moveBullet();
+	  },
+	
+	  moveBullet: function moveBullet() {
+	    this.ctx = this.getDOMNode().getContext('2d');
+	    this.bulletX = this.ShipX + 30;
+	    this.bulletY = this.ShipY + 30;
 	  },
 	
 	  render: function render() {
