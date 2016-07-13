@@ -13,9 +13,6 @@ var ShipBox = React.createClass({
     bulletX: null,
     bulletY: null,
     bulletLength: null,
-    // back:null,
-    // oldBack: null,
-
 
 
     componentDidMount: function() {
@@ -23,12 +20,6 @@ var ShipBox = React.createClass({
       window.addEventListener('keydown', this.whatKey, true);
       this.makeShip()
     },
-
-
-
-
-
-
 
       makeShip: function() {
         //Get canvas element
@@ -78,13 +69,11 @@ var ShipBox = React.createClass({
           var a = Math.floor(Math.random() * 890);
           var b = Math.floor(Math.random() * 490);
 
-          // Make the asteroids red
+          // Make asteroids red
           this.ctx.fillStyle = "#FF0000";
 
-          // Keep the asteroids far enough away from
-          // the beginning or end.
+          //Keep asteroids from generating near edge
           if (a > 200 && b > 10 && a < 860 && b < 460) {
-
             // Draw an individual asteroid.
             this.ctx.beginPath();
             this.ctx.arc(a, b, 10, 0, Math.PI * 2, true);
@@ -92,15 +81,6 @@ var ShipBox = React.createClass({
             this.ctx.fill();
           } else--i;
          }
-
-
-
-        // // Draw blue base.
-        // this.ctx.fillStyle = "#0000FF";
-        // this.ctx.beginPath();
-        // this.ctx.rect(270, 270, 30, 30);
-        // this.ctx.closePath();
-        // this.ctx.fill();
         this.GameLoop();
       },
 
@@ -113,8 +93,6 @@ var ShipBox = React.createClass({
 
       doGameLoop: function() {
         // console.log("doGameLoop Called");
-
-        // console.log(this.ship);
         this.ctx = this.getDOMNode().getContext('2d');
         this.oldBack = this.ctx.getImageData(0, 0, 30, 30);
 
@@ -125,17 +103,10 @@ var ShipBox = React.createClass({
           // Put old background down to erase ship.
           this.ctx.putImageData(this.oldBack, this.oldShipX, this.oldShipY);
         }
-
-
-
-        // //fire bullet.
-        // this.ctx.putImageData(this.bomb, this.shipX+30, this.shipY);
-
       },
 
       whatKey: function(evt) {
-
-        // Flag to put variables back if we hit an edge of the board.
+        // Flag to reset variables if canvas edge is hit.
         var flag = 0;
 
         // Get where the ship was before key process.
@@ -144,23 +115,14 @@ var ShipBox = React.createClass({
         this.oldBack = this.back;
 
         switch (evt.keyCode) {
-
-            // A key for drawing neutralizer field
+            // Bullet key
           case 65:
           console.log("case 65 called");
           this.shipX = this.oldShipX;
           this.shipY = this.oldShipY;
           this.back = this.oldBack;
-
-            // Using this increases your score.
-            // score = score + 20;
-            // The ship isn't moving.
-
-            // flag = 1;
-            // Draw the neutralizing ray which will let you pass.
-            this.makeBullet();
+          this.makeBullet();
             break;
-
           // Left arrow.
         case 37:
         console.log("case 37 called");
@@ -172,7 +134,6 @@ var ShipBox = React.createClass({
           }
           this.direction= "L";
           break;
-
           // Right arrow.
         case 39:
         console.log("case 39 called");
@@ -184,7 +145,6 @@ var ShipBox = React.createClass({
           }
           this.direction = "R";
           break;
-
           // Down arrow
         case 40:
         console.log("case 40 called");
@@ -196,7 +156,6 @@ var ShipBox = React.createClass({
           }
           this.direction = "D";
           break;
-
           // Up arrow 
         case 38:
         console.log("case 38 called");
@@ -208,9 +167,6 @@ var ShipBox = React.createClass({
           }
           this.direction = "U";
           break;
-
-
-
             // If any other keys were presssed
           default:
             flag = 1; // Don't move the ship.
@@ -233,23 +189,12 @@ var ShipBox = React.createClass({
           this.back = this.ctx.getImageData(this.shipX, this.shipY, 30, 30);
         }
       }
-        // Increase score.
-        // this.score = this.score + 1;
-
-        // // Draw score on scoreboard.
-        // ctx2.clearRect(0, 0, 300, 300);
-        // ctx2.font = "20 point Ariel";
-        // ctx2.fillText("Score", 20, 15);
-        // ctx2.fillText(score, 100, 15);
-
-        // // Did we collide?
         this.collideTest(this.direction);
       },
 
 
       collideTest: function(direction) {
         console.log("collide test called");
-
         // Collision detection. Get a clip from the screen.
         var clipWidth = 20;
         var clipDepth = 20;
@@ -257,34 +202,22 @@ var ShipBox = React.createClass({
         // alert(clipLength);
         var clipOffset = 5;
         var whatColor = this.ctx.getImageData(this.shipX + clipOffset, this.shipY + clipOffset, clipWidth, clipDepth);
-
         // Loop through the clip and see if you find red or blue. 
         for (var i = 0; i < clipLength * 4; i += 4) {
           if (whatColor.data[i] == 255) {
             console.log("collision detected");
             direction = "P";
-            // alert("You hit an Asteroid. Game Over. Please Insert Coin.");
             break;
           }
-          // Second element is green but we don't care. 
-          // if (whatColor.data[i + 2] == 255) {
-          // console.log("bullet detected");
-          // direction = "B";
-          // break;
-          // }
-
         }
-
         // Did we hit something?
         if (direction == "P"){
           alert("You hit an asteroid! Game Over. Please Insert Coin.")};
         // if (direction == "B"){
         //   alert("Bullet detected")};
-
       },
 
       bang: function() {
-
         // You lose.
         alert("Game over! You hit an asteroid.");
         // Stop game.
@@ -292,46 +225,6 @@ var ShipBox = React.createClass({
         window.removeEventListener('keydown', whatKey, true);
       },
 
-      // neutralize: function() {
-      //   console.log("neutralize called");
-      //   // Draw green for neutralizer.
-      //   this.ctx = this.getDOMNode().getContext('2d');
-      //   this.ctx.fillStyle = "#00FF00";
-      //   this.ctx.beginPath();
-      //   this.ctx.rect(this.shipX+30, this.shipY, 30, 30);
-      //   this.ctx.closePath();
-      //   this.ctx.fill();
-
-      //   // Save it for later.
-      //   this.bomb = this.ctx.getImageData(this.shipX+30, this.shipY, 30, 30);
-
-
-
-        // Which way was the ship going?
-        // Put down a neuralizer field that way.
-        // switch () {
-
-        // case "D":
-        //   this.ctx.putImageData(bomb, this.shipX, this.shipY + 30);
-        //   break;
-
-        // case "U":
-        //   this.ctx.putImageData(bomb, this.shipX, this.shipY - 30);
-        //   break;
-
-        // case "L":
-        //   this.ctx.putImageData(bomb, this.shipX - 30, this.shipY);
-        //   break;
-
-        // case "R":
-          // this.ctx.putImageData(bomb, this.shipX + 30, this.shipY);
-          // break;
-
-        // default:
-        // }
-      // },
-
-      //This will replace neutralize
       makeBullet: function(){
         console.log("makeBullet called");
         // Draw green for neutralizer.
@@ -342,18 +235,11 @@ var ShipBox = React.createClass({
         this.ctx.rect(this.shipX+30, this.shipY+10, this.bulletLength, 10);
         this.ctx.closePath();
         this.ctx.fill();
-        
-
-
-
         // Save it for later.
         this.bomb = this.ctx.getImageData(this.shipX+30, this.shipY+10, this.bulletLength, 10);
         this.bulletX=this.shipX+30;
         this.bulletY=this.shipY;
         var timeoutID = window.setTimeout(this.clearBullet, 50);
-        // this.moveBullet();
-        // this.bulletSleep(10000);
-        // this.ctx.clearRect(this.shipX+30, this.shipY, bulletLength, 30);
       },
 
       clearBullet: function(){
@@ -363,13 +249,6 @@ var ShipBox = React.createClass({
           );
       },
 
-      bulletSleep: function(miliseconds) {
-         var currentTime = new Date().getTime();
-
-         while (currentTime + miliseconds >= new Date().getTime()) {
-         }
-         this.ctx.clearRect(this.shipX+30, this.shipY, bulletLength, 30);
-      },
 
       moveBullet: function(){
         this.ctx = this.getDOMNode().getContext('2d');
@@ -387,7 +266,7 @@ var ShipBox = React.createClass({
       var style = {
         position: "absolute",
         top: "200px",
-        left: "50px"
+        left: "400px"
       };
       return (<canvas id="background" width={900} height={500} style={style}/>);
     }

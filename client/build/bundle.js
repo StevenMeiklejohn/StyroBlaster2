@@ -19740,39 +19740,6 @@
 	    console.log("loaded");
 	  },
 	
-	  // drawBackground: function(){
-	  //   var canvas = document.createElement("CANVAS");
-	  //   canvas.id = "background"
-	  //   canvas.width = 900;
-	  //   canvas.height = 500;
-	
-	  //   console.log(canvas);
-	  //   console.log(canvas.width);
-	
-	  //   var ctx = canvas.getContext("2d");
-	  //   console.log(ctx);
-	
-	  //   var velocity=100;
-	  //   var bgImage = new Image();
-	  //   bgImage.src = "https://i.ytimg.com/vi/T40NSkd7Olc/maxresdefault.jpg";
-	  //   bgImage.addEventListener('load',drawImage,false);
-	
-	  //   function drawImage(time){ 
-	  //           console.log('drawImage triggered');
-	  //           var framegap=time-lastRepaintTime;
-	  //           var lastRepaintTime=time;
-	  //           var translateX=velocity*(framegap/1000);
-	  //           ctx.clearRect(0,0,canvas.width,canvas.height);
-	  //           var pattern=ctx.createPattern(bgImage,"repeat-x");
-	  //           ctx.fillStyle=pattern;
-	  //           ctx.rect(translateX,0,bgImage.width,bgImage.height);
-	  //           ctx.fill();
-	  //           ctx.translate(-translateX,0);  
-	  //           requestAnimationFrame(drawImage);
-	  //   };
-	  //   // var lastRepaintTime=window.performance.now();
-	  // },
-	
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -19780,7 +19747,7 @@
 	      React.createElement(
 	        'h1',
 	        null,
-	        'StyroBlaster'
+	        '1981'
 	      ),
 	      React.createElement(
 	        'div',
@@ -19789,7 +19756,6 @@
 	      )
 	    );
 	  }
-	
 	});
 	
 	module.exports = GameBox;
@@ -19817,8 +19783,6 @@
 	  bulletX: null,
 	  bulletY: null,
 	  bulletLength: null,
-	  // back:null,
-	  // oldBack: null,
 	
 	  componentDidMount: function componentDidMount() {
 	    // Add keyboard listener.
@@ -19874,13 +19838,11 @@
 	      var a = Math.floor(Math.random() * 890);
 	      var b = Math.floor(Math.random() * 490);
 	
-	      // Make the asteroids red
+	      // Make asteroids red
 	      this.ctx.fillStyle = "#FF0000";
 	
-	      // Keep the asteroids far enough away from
-	      // the beginning or end.
+	      //Keep asteroids from generating near edge
 	      if (a > 200 && b > 10 && a < 860 && b < 460) {
-	
 	        // Draw an individual asteroid.
 	        this.ctx.beginPath();
 	        this.ctx.arc(a, b, 10, 0, Math.PI * 2, true);
@@ -19888,13 +19850,6 @@
 	        this.ctx.fill();
 	      } else --i;
 	    }
-	
-	    // // Draw blue base.
-	    // this.ctx.fillStyle = "#0000FF";
-	    // this.ctx.beginPath();
-	    // this.ctx.rect(270, 270, 30, 30);
-	    // this.ctx.closePath();
-	    // this.ctx.fill();
 	    this.GameLoop();
 	  },
 	
@@ -19906,8 +19861,6 @@
 	
 	  doGameLoop: function doGameLoop() {
 	    // console.log("doGameLoop Called");
-	
-	    // console.log(this.ship);
 	    this.ctx = this.getDOMNode().getContext('2d');
 	    this.oldBack = this.ctx.getImageData(0, 0, 30, 30);
 	
@@ -19918,14 +19871,10 @@
 	      // Put old background down to erase ship.
 	      this.ctx.putImageData(this.oldBack, this.oldShipX, this.oldShipY);
 	    }
-	
-	    // //fire bullet.
-	    // this.ctx.putImageData(this.bomb, this.shipX+30, this.shipY);
 	  },
 	
 	  whatKey: function whatKey(evt) {
-	
-	    // Flag to put variables back if we hit an edge of the board.
+	    // Flag to reset variables if canvas edge is hit.
 	    var flag = 0;
 	
 	    // Get where the ship was before key process.
@@ -19934,23 +19883,14 @@
 	    this.oldBack = this.back;
 	
 	    switch (evt.keyCode) {
-	
-	      // A key for drawing neutralizer field
+	      // Bullet key
 	      case 65:
 	        console.log("case 65 called");
 	        this.shipX = this.oldShipX;
 	        this.shipY = this.oldShipY;
 	        this.back = this.oldBack;
-	
-	        // Using this increases your score.
-	        // score = score + 20;
-	        // The ship isn't moving.
-	
-	        // flag = 1;
-	        // Draw the neutralizing ray which will let you pass.
 	        this.makeBullet();
 	        break;
-	
 	      // Left arrow.
 	      case 37:
 	        console.log("case 37 called");
@@ -19962,7 +19902,6 @@
 	        }
 	        this.direction = "L";
 	        break;
-	
 	      // Right arrow.
 	      case 39:
 	        console.log("case 39 called");
@@ -19974,7 +19913,6 @@
 	        }
 	        this.direction = "R";
 	        break;
-	
 	      // Down arrow
 	      case 40:
 	        console.log("case 40 called");
@@ -19986,7 +19924,6 @@
 	        }
 	        this.direction = "D";
 	        break;
-	
 	      // Up arrow
 	      case 38:
 	        console.log("case 38 called");
@@ -19998,7 +19935,6 @@
 	        }
 	        this.direction = "U";
 	        break;
-	
 	      // If any other keys were presssed
 	      default:
 	        flag = 1; // Don't move the ship.
@@ -20019,22 +19955,11 @@
 	          this.back = this.ctx.getImageData(this.shipX, this.shipY, 30, 30);
 	        }
 	    }
-	    // Increase score.
-	    // this.score = this.score + 1;
-	
-	    // // Draw score on scoreboard.
-	    // ctx2.clearRect(0, 0, 300, 300);
-	    // ctx2.font = "20 point Ariel";
-	    // ctx2.fillText("Score", 20, 15);
-	    // ctx2.fillText(score, 100, 15);
-	
-	    // // Did we collide?
 	    this.collideTest(this.direction);
 	  },
 	
 	  collideTest: function collideTest(direction) {
 	    console.log("collide test called");
-	
 	    // Collision detection. Get a clip from the screen.
 	    var clipWidth = 20;
 	    var clipDepth = 20;
@@ -20042,23 +19967,14 @@
 	    // alert(clipLength);
 	    var clipOffset = 5;
 	    var whatColor = this.ctx.getImageData(this.shipX + clipOffset, this.shipY + clipOffset, clipWidth, clipDepth);
-	
 	    // Loop through the clip and see if you find red or blue.
 	    for (var i = 0; i < clipLength * 4; i += 4) {
 	      if (whatColor.data[i] == 255) {
 	        console.log("collision detected");
 	        direction = "P";
-	        // alert("You hit an Asteroid. Game Over. Please Insert Coin.");
 	        break;
 	      }
-	      // Second element is green but we don't care.
-	      // if (whatColor.data[i + 2] == 255) {
-	      // console.log("bullet detected");
-	      // direction = "B";
-	      // break;
-	      // }
 	    }
-	
 	    // Did we hit something?
 	    if (direction == "P") {
 	      alert("You hit an asteroid! Game Over. Please Insert Coin.");
@@ -20068,7 +19984,6 @@
 	  },
 	
 	  bang: function bang() {
-	
 	    // You lose.
 	    alert("Game over! You hit an asteroid.");
 	    // Stop game.
@@ -20076,44 +19991,6 @@
 	    window.removeEventListener('keydown', whatKey, true);
 	  },
 	
-	  // neutralize: function() {
-	  //   console.log("neutralize called");
-	  //   // Draw green for neutralizer.
-	  //   this.ctx = this.getDOMNode().getContext('2d');
-	  //   this.ctx.fillStyle = "#00FF00";
-	  //   this.ctx.beginPath();
-	  //   this.ctx.rect(this.shipX+30, this.shipY, 30, 30);
-	  //   this.ctx.closePath();
-	  //   this.ctx.fill();
-	
-	  //   // Save it for later.
-	  //   this.bomb = this.ctx.getImageData(this.shipX+30, this.shipY, 30, 30);
-	
-	  // Which way was the ship going?
-	  // Put down a neuralizer field that way.
-	  // switch () {
-	
-	  // case "D":
-	  //   this.ctx.putImageData(bomb, this.shipX, this.shipY + 30);
-	  //   break;
-	
-	  // case "U":
-	  //   this.ctx.putImageData(bomb, this.shipX, this.shipY - 30);
-	  //   break;
-	
-	  // case "L":
-	  //   this.ctx.putImageData(bomb, this.shipX - 30, this.shipY);
-	  //   break;
-	
-	  // case "R":
-	  // this.ctx.putImageData(bomb, this.shipX + 30, this.shipY);
-	  // break;
-	
-	  // default:
-	  // }
-	  // },
-	
-	  //This will replace neutralize
 	  makeBullet: function makeBullet() {
 	    console.log("makeBullet called");
 	    // Draw green for neutralizer.
@@ -20124,28 +20001,17 @@
 	    this.ctx.rect(this.shipX + 30, this.shipY + 10, this.bulletLength, 10);
 	    this.ctx.closePath();
 	    this.ctx.fill();
-	
 	    // Save it for later.
 	    this.bomb = this.ctx.getImageData(this.shipX + 30, this.shipY + 10, this.bulletLength, 10);
 	    this.bulletX = this.shipX + 30;
 	    this.bulletY = this.shipY;
 	    var timeoutID = window.setTimeout(this.clearBullet, 50);
-	    // this.moveBullet();
-	    // this.bulletSleep(10000);
-	    // this.ctx.clearRect(this.shipX+30, this.shipY, bulletLength, 30);
 	  },
 	
 	  clearBullet: function clearBullet() {
 	    console.log("clearBullet called");
 	    this.ctx = this.getDOMNode().getContext('2d');
 	    this.ctx.clearRect(this.shipX + 30, this.shipY, this.bulletLength, 40);
-	  },
-	
-	  bulletSleep: function bulletSleep(miliseconds) {
-	    var currentTime = new Date().getTime();
-	
-	    while (currentTime + miliseconds >= new Date().getTime()) {}
-	    this.ctx.clearRect(this.shipX + 30, this.shipY, bulletLength, 30);
 	  },
 	
 	  moveBullet: function moveBullet() {
@@ -20162,7 +20028,7 @@
 	    var style = {
 	      position: "absolute",
 	      top: "200px",
-	      left: "50px"
+	      left: "400px"
 	    };
 	    return React.createElement('canvas', { id: 'background', width: 900, height: 500, style: style });
 	  }
