@@ -19816,6 +19816,7 @@
 	  bomb: null,
 	  bulletX: null,
 	  bulletY: null,
+	  bulletLength: null,
 	  // back:null,
 	  // oldBack: null,
 	
@@ -20060,7 +20061,7 @@
 	
 	    // Did we hit something?
 	    if (direction == "P") {
-	      alert("You hit an asteroid");
+	      alert("You hit an asteroid! Game Over. Please Insert Coin.");
 	    };
 	    // if (direction == "B"){
 	    //   alert("Bullet detected")};
@@ -20116,27 +20117,35 @@
 	  makeBullet: function makeBullet() {
 	    console.log("makeBullet called");
 	    // Draw green for neutralizer.
-	    var bulletLength = 900 - this.bulletX;
+	    this.bulletLength = 900 - this.bulletX;
 	    this.ctx = this.getDOMNode().getContext('2d');
 	    this.ctx.fillStyle = "#0000FF";
 	    this.ctx.beginPath();
-	    this.ctx.rect(this.shipX + 30, this.shipY + 10, bulletLength, 10);
+	    this.ctx.rect(this.shipX + 30, this.shipY + 10, this.bulletLength, 10);
 	    this.ctx.closePath();
 	    this.ctx.fill();
 	
 	    // Save it for later.
-	    this.bomb = this.ctx.getImageData(this.shipX + 30, this.shipY + 10, bulletLength, 10);
+	    this.bomb = this.ctx.getImageData(this.shipX + 30, this.shipY + 10, this.bulletLength, 10);
 	    this.bulletX = this.shipX + 30;
 	    this.bulletY = this.shipY;
+	    var timeoutID = window.setTimeout(this.clearBullet, 50);
 	    // this.moveBullet();
 	    // this.bulletSleep(10000);
+	    // this.ctx.clearRect(this.shipX+30, this.shipY, bulletLength, 30);
+	  },
+	
+	  clearBullet: function clearBullet() {
+	    console.log("clearBullet called");
+	    this.ctx = this.getDOMNode().getContext('2d');
+	    this.ctx.clearRect(this.shipX + 30, this.shipY, this.bulletLength, 40);
 	  },
 	
 	  bulletSleep: function bulletSleep(miliseconds) {
 	    var currentTime = new Date().getTime();
 	
 	    while (currentTime + miliseconds >= new Date().getTime()) {}
-	    this.ctx.clearRect(this.shipX + 30, this.shipY, bulletLength, 15);
+	    this.ctx.clearRect(this.shipX + 30, this.shipY, bulletLength, 30);
 	  },
 	
 	  moveBullet: function moveBullet() {
