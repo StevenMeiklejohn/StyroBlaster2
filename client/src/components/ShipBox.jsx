@@ -120,8 +120,15 @@ var ShipBox = React.createClass({
         // Put ship in new position.
         this.ctx.putImageData(this.ship, this.shipX, this.shipY);
 
-        // Put old background down to erase ship.
-        this.ctx.putImageData(this.oldBack, this.oldShipX, this.oldShipY);
+        if (this.shipX !== this.oldShipX || this.shipY !== this.oldShipY) {
+          // Put old background down to erase ship.
+          this.ctx.putImageData(this.oldBack, this.oldShipX, this.oldShipY);
+        }
+
+
+
+        // //fire bullet.
+        // this.ctx.putImageData(this.bomb, this.shipX+30, this.shipY);
 
       },
 
@@ -137,8 +144,25 @@ var ShipBox = React.createClass({
 
         switch (evt.keyCode) {
 
+            // A key for drawing neutralizer field
+          case 65:
+          console.log("case 65 called");
+          this.shipX = this.oldShipX;
+          this.shipY = this.oldShipY;
+          this.back = this.oldBack;
+
+            // Using this increases your score.
+            // score = score + 20;
+            // The ship isn't moving.
+
+            // flag = 1;
+            // Draw the neutralizing ray which will let you pass.
+            this.makeBullet();
+            break;
+
           // Left arrow.
         case 37:
+        console.log("case 37 called");
           this.shipX = this.shipX - 30;
           if (this.shipX < 0) {
             // If at edge, reset ship position and set flag.
@@ -150,6 +174,7 @@ var ShipBox = React.createClass({
 
           // Right arrow.
         case 39:
+        console.log("case 39 called");
           this.shipX = this.shipX + 30;
           if (this.shipX > 870) {
             // If at edge, reset ship position and set flag.
@@ -161,6 +186,7 @@ var ShipBox = React.createClass({
 
           // Down arrow
         case 40:
+        console.log("case 40 called");
           this.shipY = this.shipY + 30;
           if (this.shipY > 470) {
             // If at edge, reset ship position and set flag.
@@ -172,6 +198,7 @@ var ShipBox = React.createClass({
 
           // Up arrow 
         case 38:
+        console.log("case 38 called");
           this.shipY = this.shipY - 30;
           if (this.shipY < 0) {
             // If at edge, reset ship position and set flag.
@@ -181,36 +208,30 @@ var ShipBox = React.createClass({
           this.direction = "U";
           break;
 
-          // A key for drawing neutralizer field
-        case 65:
-          // Using this increases your score.
-          // score = score + 20;
-          // The ship isn't moving.
-          flag = 1;
-          // Draw the neutralizing ray which will let you pass.
-          this.neutralize(this.direction);
-          break;
+
 
             // If any other keys were presssed
           default:
             flag = 1; // Don't move the ship.
             alert("Please only use the arrow keys.");
 
-        }
+        
 
         // If flag is set, the ship did not move.
         // Put everything back the way it was.
         if (flag) {
+          console.log("if called");
           this.shipX = this.oldShipX;
           this.shipY = this.oldShipY;
           this.back = this.oldBack;
-          this.score = this.score - 1;
+          // this.score = this.score - 1;
         } else {
           // Otherwise, get background where the ship will go
           // So you can redraw background when the ship
           // moves again.
           this.back = this.ctx.getImageData(this.shipX, this.shipY, 30, 30);
         }
+      }
         // Increase score.
         // this.score = this.score + 1;
 
@@ -239,13 +260,25 @@ var ShipBox = React.createClass({
         // Loop through the clip and see if you find red or blue. 
         for (var i = 0; i < clipLength * 4; i += 4) {
           if (whatColor.data[i] == 255) {
-            alert("You hit an Asteroid. Game Over. Please Insert Coin.");
+            console.log("collision detected");
+            direction = "P";
+            // alert("You hit an Asteroid. Game Over. Please Insert Coin.");
             break;
           }
+          // Second element is green but we don't care. 
+          // if (whatColor.data[i + 2] == 255) {
+          // console.log("bullet detected");
+          // direction = "B";
+          // break;
+          // }
+
         }
 
         // Did we hit something?
-        if (direction == "P") this.bang();
+        if (direction == "P"){
+          alert("You hit an asteroid")};
+        // if (direction == "B"){
+        //   alert("Bullet detected")};
 
       },
 
@@ -258,59 +291,84 @@ var ShipBox = React.createClass({
         window.removeEventListener('keydown', whatKey, true);
       },
 
-      neutralize: function(direction) {
-        // Draw green for neutralizer.
-        this.ctx = this.getDOMNode().getContext('2d');
-        this.ctx.fillStyle = "#00FF00";
-        this.ctx.beginPath();
-        this.ctx.rect(this.shipX, this.shipY, 30, 30);
-        this.ctx.closePath();
-        this.ctx.fill();
+      // neutralize: function() {
+      //   console.log("neutralize called");
+      //   // Draw green for neutralizer.
+      //   this.ctx = this.getDOMNode().getContext('2d');
+      //   this.ctx.fillStyle = "#00FF00";
+      //   this.ctx.beginPath();
+      //   this.ctx.rect(this.shipX+30, this.shipY, 30, 30);
+      //   this.ctx.closePath();
+      //   this.ctx.fill();
 
-        // Save it for later.
-        var bomb = this.ctx.getImageData(this.shipX, this.shipY, 30, 30);
+      //   // Save it for later.
+      //   this.bomb = this.ctx.getImageData(this.shipX+30, this.shipY, 30, 30);
+
+
 
         // Which way was the ship going?
         // Put down a neuralizer field that way.
-        switch (direction) {
+        // switch () {
 
-        case "D":
-          this.ctx.putImageData(bomb, this.shipX, this.shipY + 30);
-          break;
+        // case "D":
+        //   this.ctx.putImageData(bomb, this.shipX, this.shipY + 30);
+        //   break;
 
-        case "U":
-          this.ctx.putImageData(bomb, this.shipX, this.shipY - 30);
-          break;
+        // case "U":
+        //   this.ctx.putImageData(bomb, this.shipX, this.shipY - 30);
+        //   break;
 
-        case "L":
-          this.ctx.putImageData(bomb, this.shipX - 30, this.shipY);
-          break;
+        // case "L":
+        //   this.ctx.putImageData(bomb, this.shipX - 30, this.shipY);
+        //   break;
 
-        case "R":
-          this.ctx.putImageData(bomb, this.shipX + 30, this.shipY);
-          break;
+        // case "R":
+          // this.ctx.putImageData(bomb, this.shipX + 30, this.shipY);
+          // break;
 
-        default:
-        }
-      },
+        // default:
+        // }
+      // },
 
       //This will replace neutralize
       makeBullet: function(){
-
-        // Draw Bullet
+        console.log("makeBullet called");
+        // Draw green for neutralizer.
+        var bulletLength = 900 - this.bulletX;
         this.ctx = this.getDOMNode().getContext('2d');
-        this.ctx.fillStyle = "#00FF00";
+        this.ctx.fillStyle = "#0000FF";
         this.ctx.beginPath();
-        this.ctx.rect(this.shipX, this.shipY, 30, 30);
+        this.ctx.rect(this.shipX+30, this.shipY+10, bulletLength, 10);
         this.ctx.closePath();
         this.ctx.fill();
+        
+
+
+
+        // Save it for later.
+        this.bomb = this.ctx.getImageData(this.shipX+30, this.shipY+10, bulletLength, 10);
+        this.bulletX=this.shipX+30;
+        this.bulletY=this.shipY;
         // this.moveBullet();
+        // this.bulletSleep(10000);
+      },
+
+      bulletSleep: function(miliseconds) {
+         var currentTime = new Date().getTime();
+
+         while (currentTime + miliseconds >= new Date().getTime()) {
+         }
+         this.ctx.clearRect(this.shipX+30, this.shipY, bulletLength, 15);
       },
 
       moveBullet: function(){
         this.ctx = this.getDOMNode().getContext('2d');
-        this.bulletX=this.ShipX+30;
-        this.bulletY=this.ShipY+30;
+        this.ctx.fillStyle = "#0000FF";
+        this.ctx.beginPath();
+        this.ctx.rect(this.bulletX, this.BulletY, 30, 30);
+        this.ctx.closePath();
+        this.ctx.fill();
+        this.bulletX+30;
       },
 
 
