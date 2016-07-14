@@ -2,26 +2,26 @@ var React = require('react');
 
 var ShipBox = React.createClass({
 
-    ship:null,
-    shipX:null,
-    shipY:null,
-    oldShipX: null,
-    oldShipY: null,
-    direction: null,
-    score: null,
-    bomb:null,
-    bulletX: null,
-    bulletY: null,
-    bulletLength: null,
+	ship:null,
+	shipX:null,
+	shipY:null,
+	oldShipX: null,
+	oldShipY: null,
+	direction: null,
+	score: null,
+	bomb:null,
+	bulletX: null,
+	bulletY: null,
+	bulletLength: null,
 
 
-    componentDidMount: function() {
+	componentDidMount: function() {
       // Add keyboard listener.
       window.addEventListener('keydown', this.whatKey, true);
       this.makeShip()
     },
 
-      makeShip: function() {
+    makeShip: function() {
         //Get canvas element
         this.ctx = this.getDOMNode().getContext('2d');
         this.ctx.clearRect(0, 0, 900, 500);
@@ -60,9 +60,9 @@ var ShipBox = React.createClass({
       },
 
       drawAsteroids: function() {
-        console.log("drawAsteroids called");
-        this.ctx = this.getDOMNode().getContext('2d');
-        console.log(this.ctx);
+      	console.log("drawAsteroids called");
+      	this.ctx = this.getDOMNode().getContext('2d');
+      	console.log(this.ctx);
         // Draw asteroids.
         for (var i = 0; i <= 20; i++) {
           // Get random positions for asteroids.
@@ -80,12 +80,12 @@ var ShipBox = React.createClass({
             this.ctx.closePath();
             this.ctx.fill();
           } else--i;
-         }
+        }
         this.GameLoop();
       },
 
       GameLoop: function(){
-        console.log("GameLoop called");
+      	console.log("GameLoop called");
         // Play the game until the until the game is over.
         setInterval(this.doGameLoop, 16);
 
@@ -109,23 +109,23 @@ var ShipBox = React.createClass({
         // Flag to reset variables if canvas edge is hit.
         var flag = 0;
 
-        // Get where the ship was before key process.
+        //Ship's previous position
         this.oldShipX = this.shipX;
         this.oldShipY = this.shipY;
         this.oldBack = this.back;
 
         switch (evt.keyCode) {
             // Bullet key
-          case 65:
-          console.log("case 65 called");
-          this.shipX = this.oldShipX;
-          this.shipY = this.oldShipY;
-          this.back = this.oldBack;
-          this.makeBullet();
+            case 65:
+            console.log("case 65 called");
+            this.shipX = this.oldShipX;
+            this.shipY = this.oldShipY;
+            this.back = this.oldBack;
+            this.makeBullet();
             break;
           // Left arrow.
-        case 37:
-        console.log("case 37 called");
+          case 37:
+          console.log("case 37 called");
           this.shipX = this.shipX - 30;
           if (this.shipX < 0) {
             // If at edge, reset ship position and set flag.
@@ -135,8 +135,8 @@ var ShipBox = React.createClass({
           this.direction= "L";
           break;
           // Right arrow.
-        case 39:
-        console.log("case 39 called");
+          case 39:
+          console.log("case 39 called");
           this.shipX = this.shipX + 30;
           if (this.shipX > 870) {
             // If at edge, reset ship position and set flag.
@@ -146,8 +146,8 @@ var ShipBox = React.createClass({
           this.direction = "R";
           break;
           // Down arrow
-        case 40:
-        console.log("case 40 called");
+          case 40:
+          console.log("case 40 called");
           this.shipY = this.shipY + 30;
           if (this.shipY > 470) {
             // If at edge, reset ship position and set flag.
@@ -157,8 +157,8 @@ var ShipBox = React.createClass({
           this.direction = "D";
           break;
           // Up arrow 
-        case 38:
-        console.log("case 38 called");
+          case 38:
+          console.log("case 38 called");
           this.shipY = this.shipY - 30;
           if (this.shipY < 0) {
             // If at edge, reset ship position and set flag.
@@ -168,19 +168,19 @@ var ShipBox = React.createClass({
           this.direction = "U";
           break;
             // If any other keys were presssed
-          default:
+            default:
             flag = 1; // Don't move the ship.
             alert("Please only use the arrow keys.");
 
-        
+            
 
         // If flag is set, the ship did not move.
         // Put everything back the way it was.
         if (flag) {
-          console.log("if called");
-          this.shipX = this.oldShipX;
-          this.shipY = this.oldShipY;
-          this.back = this.oldBack;
+        	console.log("if called");
+        	this.shipX = this.oldShipX;
+        	this.shipY = this.oldShipY;
+        	this.back = this.oldBack;
           // this.score = this.score - 1;
         } else {
           // Otherwise, get background where the ship will go
@@ -189,12 +189,12 @@ var ShipBox = React.createClass({
           this.back = this.ctx.getImageData(this.shipX, this.shipY, 30, 30);
         }
       }
-        this.collideTest(this.direction);
-      },
+      this.collideTest(this.direction);
+    },
 
 
-      collideTest: function(direction) {
-        console.log("collide test called");
+    collideTest: function(direction) {
+    	console.log("collide test called");
         // Collision detection. Get a clip from the screen.
         var clipWidth = 20;
         var clipDepth = 20;
@@ -204,15 +204,15 @@ var ShipBox = React.createClass({
         var whatColor = this.ctx.getImageData(this.shipX + clipOffset, this.shipY + clipOffset, clipWidth, clipDepth);
         // Loop through the clip and see if you find red or blue. 
         for (var i = 0; i < clipLength * 4; i += 4) {
-          if (whatColor.data[i] == 255) {
-            console.log("collision detected");
-            direction = "P";
-            break;
-          }
+        	if (whatColor.data[i] == 255) {
+        		console.log("collision detected");
+        		direction = "P";
+        		break;
+        	}
         }
         // Did we hit something?
         if (direction == "P"){
-          alert("You hit an asteroid! Game Over. Please Insert Coin.")};
+        	alert("You hit an asteroid! Game Over. Please Insert Coin.")};
         // if (direction == "B"){
         //   alert("Bullet detected")};
       },
@@ -226,7 +226,7 @@ var ShipBox = React.createClass({
       },
 
       makeBullet: function(){
-        console.log("makeBullet called");
+      	console.log("makeBullet called");
         // Draw green for neutralizer.
         this.bulletLength = 900 - this.bulletX;
         this.ctx = this.getDOMNode().getContext('2d');
@@ -243,34 +243,34 @@ var ShipBox = React.createClass({
       },
 
       clearBullet: function(){
-        console.log("clearBullet called");
-        this.ctx = this.getDOMNode().getContext('2d');
-        this.ctx.clearRect(this.shipX+30, this.shipY, this.bulletLength, 40
-          );
+      	console.log("clearBullet called");
+      	this.ctx = this.getDOMNode().getContext('2d');
+      	this.ctx.clearRect(this.shipX+30, this.shipY, this.bulletLength, 40
+      		);
       },
 
 
       moveBullet: function(){
-        this.ctx = this.getDOMNode().getContext('2d');
-        this.ctx.fillStyle = "#0000FF";
-        this.ctx.beginPath();
-        this.ctx.rect(this.bulletX, this.BulletY, 30, 30);
-        this.ctx.closePath();
-        this.ctx.fill();
-        this.bulletX+30;
+      	this.ctx = this.getDOMNode().getContext('2d');
+      	this.ctx.fillStyle = "#0000FF";
+      	this.ctx.beginPath();
+      	this.ctx.rect(this.bulletX, this.BulletY, 30, 30);
+      	this.ctx.closePath();
+      	this.ctx.fill();
+      	this.bulletX+30;
       },
 
 
-    
-    render: function() {
-      var style = {
-        position: "absolute",
-        top: "200px",
-        left: "400px"
-      };
-      return (<canvas id="background" width={900} height={500} style={style}/>);
-    }
-})
+      
+      render: function() {
+      	var style = {
+      		position: "absolute",
+      		top: "200px",
+      		left: "400px"
+      	};
+      	return (<canvas id="background" width={900} height={500} style={style}/>);
+      }
+    })
 
 module.exports = ShipBox;
 
